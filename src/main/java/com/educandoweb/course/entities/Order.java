@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
+import com.educandoweb.course.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
@@ -24,10 +25,10 @@ public class Order implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@JsonFormat(shape=JsonFormat.Shape.STRING,pattern="yyyy-MM-dd'T'HH:mm:ss'Z'",timezone="GMT")
-	private Instant moment;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+	private Instant moment;
+	private Integer orderSatus;
 	@ManyToOne
 	@JoinColumn(name = "client_id")
 	private User client;
@@ -36,10 +37,11 @@ public class Order implements Serializable {
 
 	}
 
-	public Order(Long id, Instant moment, User client) {
+	public Order(Long id, Instant moment, User client, OrderStatus orderStatus) {
 		this.id = id;
 		this.moment = moment;
 		this.client = client;
+		setOrderSatus(orderStatus);
 	}
 
 	public Long getId() {
@@ -56,6 +58,17 @@ public class Order implements Serializable {
 
 	public void setMoment(Instant moment) {
 		this.moment = moment;
+	}
+
+	public OrderStatus getOrderSatus() {
+		return OrderStatus.valueOf(orderSatus);
+	}
+
+	public void setOrderSatus(OrderStatus orderSatus) {
+		if(orderSatus!=null) {
+			this.orderSatus = orderSatus.getCode();
+		}
+		
 	}
 
 	public User getClient() {
